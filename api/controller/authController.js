@@ -1,6 +1,7 @@
 import user from "../models/user.moddle.js";
 import bcryptjs from "bcryptjs";
-export const signup = async (req, res) => {
+import { errorHandler } from "../utils/error.js";
+export const signup = async (req, res, next) => {
   console.log(req.body);
   const { username, email, password } = req.body;
   const hashedpassword = bcryptjs.hashSync(password, 10);
@@ -8,7 +9,7 @@ export const signup = async (req, res) => {
   try {
     await newUser.save();
     res.status(201).json("user created successfully");
-  } catch (err) {
-    res.status(500).json(err.message);
+  } catch (error) {
+    next(errorHandler(550, "error from the function"));
   }
 };
